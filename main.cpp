@@ -158,6 +158,7 @@ std::vector<real> solve(const std::vector<real>& aa, int ma,
     return xx;
 
   std::vector<real> pp = rr;
+  int k = 0;
   while (true) {
     std::vector<real> alpha_top = mul(tra(rr, 1), n, rr, 1);
     std::vector<real> alpha_bot = mul(mul(tra(pp, 1), n, aa, n), n, pp, 1);
@@ -179,7 +180,9 @@ std::vector<real> solve(const std::vector<real>& aa, int ma,
     pp = add(rr, 1, mul(beta, pp), 1);
 //    std::fprintf(stderr, "[pp] = "), print1dh(pp);
 //    std::this_thread::sleep_for(std::chrono::seconds(1));
+    k++;
   }
+  std::fprintf(stderr, ">> Solved in %d iterations\n", k);
 
   return xx;
 }
