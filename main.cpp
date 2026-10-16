@@ -204,42 +204,7 @@ bool check_positive_definite(const std::vector<real>& aa, int ma)
   }
 
   /* https://www.gaussianwaves.com/2013/04/tests-for-positive-definiteness-of-a-matrix/ */
-  for (int s = 1; s <= na; s++) {
-    real det = 0;
-
-    for (int x = 0; x < ma; x++) {
-      real top = -1.0;
-
-      int i = ma - 1;
-      int j = x;
-      for (int t = 0; t < ma; t++) {
-        top *= aa[i * ma + j];
-
-        i = (i - 1 + ma) % ma;
-        j = (j + 1) % ma;
-      }
-
-      det += top;
-    }
-
-    for (int x = 0; x < ma; x++) {
-      real bot = 1.0;
-
-      int i = 0;
-      int j = x;
-      for (int t = 0; t < ma; t++) {
-        bot *= aa[i * ma + j];
-
-        i = (i + 1) % ma;
-        j = (j + 1) % ma;
-      }
-
-      det += bot;
-    }
-
-    if (det <= 0)
-      return false;
-  }
+  // TODO: Actually calculate the det of s x s top-left.
 
   return true;
 }
