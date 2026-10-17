@@ -124,7 +124,6 @@ std::vector<real> tra(const std::vector<real>& aa, int ma)
 
 bool acceptable(const std::vector<real>& rr)
 {
-//  print1dh(rr);
   for (real r : rr)
     if (std::abs(r) > epsilon)
       return false;
@@ -152,7 +151,9 @@ std::vector<real> solve(const std::vector<real>& aa, int ma,
 
   std::vector<real> xx(n);
 
-  /* Assume x_0 = [0] -> r_0 := b */
+  /* https://en.wikipedia.org/wiki/Conjugate_gradient_method
+   * >> Assume x_0 = [0] -> r_0 := b
+   */
   std::vector<real> rr = bb;
   if (acceptable(rr))
     return xx;
@@ -163,23 +164,19 @@ std::vector<real> solve(const std::vector<real>& aa, int ma,
     std::vector<real> alpha_top = mul(tra(rr, 1), n, rr, 1);
     std::vector<real> alpha_bot = mul(mul(tra(pp, 1), n, aa, n), n, pp, 1);
     real alpha = alpha_top[0] / alpha_bot[0];
-//    std::fprintf(stderr, "alpha = %lf\n", alpha);
 
     xx = add(xx, 1, mul(alpha, pp), 1);
 
     rr = sub(rr, 1, mul(mul(alpha, aa), n, pp, 1), 1);
-//    std::fprintf(stderr, "[rr] = "), print1dh(rr);
     if (acceptable(rr))
       break;
    
     std::vector<real> beta_top = mul(tra(rr, 1), n, rr, 1);
     std::vector<real> beta_bot = alpha_top;
     real beta = beta_top[0] / beta_bot[0];
-//    std::fprintf(stderr, "beta = %lf\n", beta);
 
     pp = add(rr, 1, mul(beta, pp), 1);
-//    std::fprintf(stderr, "[pp] = "), print1dh(pp);
-//    std::this_thread::sleep_for(std::chrono::seconds(1));
+
     k++;
   }
   std::fprintf(stderr, ">> Solved in %d iterations\n", k);
@@ -207,7 +204,7 @@ bool check_positive_definite(const std::vector<real>& aa, int ma)
   }
 
   /* https://www.gaussianwaves.com/2013/04/tests-for-positive-definiteness-of-a-matrix/ */
-  // TODO: Actually calculate the det of s x s top-left.
+  /* TODO: actually calculate the det of s x s top-left. */
 
   return true;
 }
@@ -236,18 +233,10 @@ int main(int argc, char** argv)
 
   std::fprintf(stderr, "[aa] = ");
   print2d(aa, n);
-//  print2d(tra(aa, n), n);
+
   std::fprintf(stderr, "[bb] = ");
   print1dv(bb);
-//  print1dh(bb);
   
-//  print2d(add(aa, n, aa, n), n);
-//  print2d(sub(aa, n, aa, n), n);
-
-  /* https://matrixcalc.org */
-//  print2d(mul(aa, n, aa, n), n);
-
-  /* https://matrixcalc.org */
   std::vector<real> xx = solve(aa, n, bb);
   std::fprintf(stderr, "[xx] = ");
   print1dv(xx);
